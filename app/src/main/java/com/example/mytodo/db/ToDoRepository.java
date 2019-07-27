@@ -40,6 +40,13 @@ public class ToDoRepository {
         updateTask.execute(todo);
     }
 
+    public void deleteToDo(int id) {
+        DeleteToDoTask deleteTask = new DeleteToDoTask(mContext);
+        ToDo todo = new ToDo();
+        todo.setId(id);
+        deleteTask.execute(todo);
+    }
+
     private static class UpdateToDoTask extends AsyncTask<ToDo, Void, Void> {
 
         private Context mContext;
@@ -55,6 +62,27 @@ public class ToDoRepository {
 
             for (ToDo ToDo : ToDos) {
                 db.toDoDao().update(ToDo);
+            }
+
+            return null;
+        } // ปิด doInBackground
+    }// ปิด
+
+    private static class DeleteToDoTask extends AsyncTask<ToDo, Void, Void> {
+
+        private Context mContext;
+
+        DeleteToDoTask(Context context) {
+            this.mContext = context;
+
+        }
+
+        @Override
+        protected Void doInBackground(ToDo... ToDos) {
+            AppDatabase db = AppDatabase.getInstance(mContext);
+
+            for (ToDo ToDo : ToDos) {
+                db.toDoDao().delete(ToDo);
             }
 
             return null;

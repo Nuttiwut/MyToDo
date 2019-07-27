@@ -1,7 +1,9 @@
 package com.example.mytodo;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -36,6 +38,29 @@ public class UpdateToDoActivity extends AppCompatActivity {
                 updateToDo();
             }
         });
+
+        Button deleteButton = findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new AlertDialog.Builder(UpdateToDoActivity.this)
+                        .setTitle(R.string.app_name)
+                        .setMessage("ยืนยันการลบ ToDo นี้หรือไม่?")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ToDoRepository repo = new ToDoRepository(UpdateToDoActivity.this);
+                                repo.deleteToDo(mToDo.getId());
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            }
+        });
+
+
     }
 
     private void updateToDo() {
