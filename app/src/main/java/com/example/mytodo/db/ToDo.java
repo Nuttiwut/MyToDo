@@ -4,10 +4,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.Date;
+import java.io.Serializable;
 
 @Entity(tableName = "todo")
-public class ToDo {
+public class ToDo implements Serializable {
 
     //ตั้งฟิว 4 ตัว
     @PrimaryKey(autoGenerate = true)
@@ -19,8 +19,8 @@ public class ToDo {
     @ColumnInfo(name = "detail")
     private String detail;
 
-    @ColumnInfo(name = "due_date")
-    private Date dueDate;
+//    @ColumnInfo(name = "due_date")
+//    private Date dueDate;
 
     //Gen geter และ Setter
 
@@ -48,11 +48,11 @@ public class ToDo {
         this.detail = detail;
     }
 
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }
+//    public Date getDueDate() {
+//        return dueDate;
+//    }
+//
+//    public void setDueDate(Date dueDate) {
+//        this.dueDate = dueDate;
+//    }
 }
