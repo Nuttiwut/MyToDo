@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 @Entity(tableName = "todo")
@@ -11,15 +13,19 @@ public class ToDo implements Serializable {
 
     //ตั้งฟิว 4 ตัว
     @PrimaryKey(autoGenerate = true)
+    @SerializedName("id")
     private int id;
 
     @ColumnInfo(name = "title")
+    @SerializedName("title")
     private String title;
 
     @ColumnInfo(name = "detail")
+    @SerializedName("details")
     private String detail;
 
     @ColumnInfo(name = "checked")
+    @SerializedName("finished")
     private boolean checked;
 
 //    @ColumnInfo(name = "due_date")
