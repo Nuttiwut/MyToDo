@@ -22,6 +22,7 @@ public class ToDoRepository {
         ToDo todo = new ToDo();
         todo.setTitle(title);
         todo.setDetail(details);
+        todo.setChecked(false);
         addTask.execute(todo);
     }
 
@@ -31,12 +32,21 @@ public class ToDoRepository {
         return null;
     }
 
-    public void updateToDo(int id, String title, String details) {
+    public void updateToDo(int id, String title, String details, boolean check) {
         UpdateToDoTask updateTask = new UpdateToDoTask(mContext);
         ToDo todo = new ToDo();
         todo.setId(id);
         todo.setTitle(title);
         todo.setDetail(details);
+        todo.setChecked(check);
+        updateTask.execute(todo);
+    }
+
+    public void updateOnlyCheck(int id, boolean check) {
+        UpdateToDoTask updateTask = new UpdateToDoTask(mContext);
+        ToDo todo = new ToDo();
+        todo.setId(id);
+        todo.setChecked(check);
         updateTask.execute(todo);
     }
 

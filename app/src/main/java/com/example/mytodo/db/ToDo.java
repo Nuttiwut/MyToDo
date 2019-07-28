@@ -19,6 +19,9 @@ public class ToDo implements Serializable {
     @ColumnInfo(name = "detail")
     private String detail;
 
+    @ColumnInfo(name = "checked")
+    private boolean checked;
+
 //    @ColumnInfo(name = "due_date")
 //    private Date dueDate;
 
@@ -48,7 +51,15 @@ public class ToDo implements Serializable {
         this.detail = detail;
     }
 
-//    public Date getDueDate() {
+    public boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    //    public Date getDueDate() {
 //        return dueDate;
 //    }
 //
