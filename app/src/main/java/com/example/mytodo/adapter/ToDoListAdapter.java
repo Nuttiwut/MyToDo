@@ -47,7 +47,19 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.MyView
         ToDo todo = mToDoList.get(position);
         holder.titleTextView.setText(todo.getTitle());
         holder.detailsTextView.setText(todo.getDetail());
+
+        holder.checkBoxView.setOnCheckedChangeListener(null);
         holder.checkBoxView.setChecked(todo.getChecked());
+
+        holder.checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                ToDoRepository repo = new ToDoRepository(mContext);
+                repo.updateToDo(todo.getId(),todo.getTitle(),todo.getDetail(),b);
+                todo.setChecked(b);
+            }
+        });
+
         holder.toDo = todo;
 
     }
@@ -85,15 +97,8 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.MyView
             detailsTextView = itemView.findViewById(R.id.details_text_view);
             checkBoxView = itemView.findViewById(R.id.check_box);
 
-//            checkBoxView.
-//
-//            checkBoxView.OnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
-//                @Override
-//                public  void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                    ToDoRepository repo = new ToDoRepository(mContext);
-//                    repo.updateOnlyCheck(toDo.getId(),toDo.getChecked());
-//                }
-//            });
+
+
 
         }
     }
