@@ -1,5 +1,6 @@
 package com.example.mytodo;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -7,7 +8,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.mytodo.adapter.ToDoListAdapter;
+import com.example.mytodo.db.ToDo;
 import com.example.mytodo.db.ToDoRepository;
+import com.example.mytodo.net.AddToDoResponse;
+import com.example.mytodo.net.ApiClient;
+import com.example.mytodo.net.GetToDoResponse;
+import com.example.mytodo.net.MyRetrofitCallback;
+import com.example.mytodo.net.WebServices;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Retrofit;
 
 public class AddToDoActivity extends AppCompatActivity {
 
@@ -35,9 +48,38 @@ public class AddToDoActivity extends AppCompatActivity {
             String title = mTitleEditText.getText().toString().trim();
             String details = mDetailsEditText.getText().toString().trim();
 
-            ToDoRepository repo = new ToDoRepository(AddToDoActivity.this);
-            repo.addToDo(title,details);
-            finish();
+//            ติดต่อกับฐานข้อมูลภายใน
+//            ToDoRepository repo = new ToDoRepository(AddToDoActivity.this);
+//            repo.addToDo(title,details);
+//            finish();
+
+//            ติดต่อกับฐานข้อมูลออนไลน์
+            Retrofit retrofit = ApiClient.getClient();
+            WebServices services = retrofit.create(WebServices.class);
+            Call<AddToDoResponse> call = services.addTodo(title,details);
+            call.enqueue(new MyRetrofitCallback<>(
+                    AddToDoActivity.this,
+                    null,
+                    null,
+                    new MyRetrofitCallback.MyRetrofitCallbackListener<AddToDoResponse>() {
+                        @Override
+                        public void onSuccess(AddToDoResponse responseBody) {
+                            finish();
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            new AlertDialog.Builder(AddToDoActivity.this)
+                                    .setTitle("Error")
+                                    .setMessage(errorMessage)
+                                    .setPositiveButton("OK", null)
+                                    .show();
+                        }
+                    }
+            ));
+
+
+
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.mytodo;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,7 @@ import com.example.mytodo.db.ToDo;
 import com.example.mytodo.db.ToDoRepository;
 import com.example.mytodo.net.ApiClient;
 import com.example.mytodo.net.GetToDoResponse;
+import com.example.mytodo.net.MyRetrofitCallback;
 import com.example.mytodo.net.WebServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -109,30 +111,28 @@ public class MainActivity extends AppCompatActivity {
         Retrofit retrofit = ApiClient.getClient();
         WebServices services = retrofit.create(WebServices.class);
         Call<GetToDoResponse> call = services.getAllTodo();
-        call.enqueue(new Callback<GetToDoResponse>() {
-            @Override
-            public void onResponse(Call<GetToDoResponse> call, Response<GetToDoResponse> response) {
-                mProgressBar.setVisibility(View.GONE);
-
-                if (response.isSuccessful()){
-                    GetToDoResponse result = response.body();
-                    if (result.error.getCode() == 0){
-                        List<ToDo> toDoList = result.data;
+        call.enqueue(new MyRetrofitCallback<>(
+                MainActivity.this,
+                null,
+                mProgressBar,
+                new MyRetrofitCallback.MyRetrofitCallbackListener<GetToDoResponse>() {
+                    @Override
+                    public void onSuccess(GetToDoResponse responseBody) {
+                        List<ToDo> toDoList = responseBody.data;
                         ToDoListAdapter adapter = new ToDoListAdapter(MainActivity.this, toDoList);
                         mToDoRecyclerView.setAdapter(adapter);
                     }
-                } else {
-                    Log.e(TAG, "Not success");
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("Error")
+                                .setMessage(errorMessage)
+                                .setPositiveButton("OK", null)
+                                .show();
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<GetToDoResponse> call, Throwable t) {
-                mProgressBar.setVisibility(View.GONE);
-
-                Log.e(TAG, t.getMessage());
-            }
-        });
+        ));
 
     }
 }
